@@ -1,0 +1,50 @@
+{
+  "_description": "Configuration for cyclic peptide data preprocessing",
+  "_source": "Extracted from examples/use_case_4_data_preprocessing.py",
+
+  "data_filter": {
+    "min_y_value": -10.0,
+    "remove_duplicates": true,
+    "validate_smiles": true
+  },
+
+  "train_split": {
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "test_size": 0.2,
+    "random_state": 42,
+    "stratify": false
+  },
+
+  "featurization": {
+    "skip_featurization": true,
+    "force_field": "uff",
+    "ignore_interfrag_interactions": true,
+    "add_dummy_node": true,
+    "one_hot_formal_charge": false,
+    "use_data_saving": true
+  },
+
+  "datasets": {
+    "caco2": "data/CycPeptMPDB_Peptide_Assay_Caco2.csv",
+    "pampa": "data/CycPeptMPDB_Peptide_Assay_PAMPA.csv",
+    "rrck": "data/CycPeptMPDB_Peptide_Assay_RRCK.csv",
+    "mdck": "data/CycPeptMPDB_Peptide_Assay_MDCK.csv"
+  },
+
+  "input": {
+    "format": "csv",
+    "required_columns": ["smiles", "y"],
+    "column_mapping": {
+      "SMILES": "smiles",
+      "Y": "y"
+    }
+  },
+
+  "output": {
+    "save_clean": true,
+    "save_splits": true,
+    "save_metadata": true,
+    "save_features": false
+  }
+}

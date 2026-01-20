@@ -1,0 +1,76 @@
+{
+  "test_date": "2025-12-31T16:58:46.441978",
+  "project_root": "/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp",
+  "summary": {
+    "total": 8,
+    "passed": 7,
+    "failed": 1,
+    "pass_rate": "87.5%"
+  },
+  "tests": [
+    {
+      "name": "Environment Activation",
+      "status": "passed",
+      "command": "source $(conda info --base)/etc/profile.d/conda.sh && conda activate ./env && python -c 'import sys; print(sys.executable)'",
+      "return_code": 0,
+      "stdout": "/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/env/bin/python",
+      "stderr": ""
+    },
+    {
+      "name": "Server Import",
+      "status": "passed",
+      "command": "source $(conda info --base)/etc/profile.d/conda.sh && conda activate ./env && python -c 'from src.server import mcp; print(\"Import successful\")'",
+      "return_code": 0,
+      "stdout": "Import successful",
+      "stderr": ""
+    },
+    {
+      "name": "RDKit Import",
+      "status": "passed",
+      "command": "source $(conda info --base)/etc/profile.d/conda.sh && conda activate ./env && python -c 'from rdkit import Chem; print(\"RDKit OK\")'",
+      "return_code": 0,
+      "stdout": "RDKit OK",
+      "stderr": ""
+    },
+    {
+      "name": "Tool Count",
+      "status": "passed",
+      "command": "grep -c '@mcp.tool' src/server.py",
+      "return_code": 0,
+      "stdout": "15",
+      "stderr": ""
+    },
+    {
+      "name": "Scripts Directory",
+      "status": "passed",
+      "command": "ls -la scripts/",
+      "return_code": 0,
+      "stdout": "total 104\ndrwxrwxr-x  4 xux g-xux  4096 Dec 31 16:49 .\ndrwxrwxr-x 15 xux g-xux  4096 Dec 31 16:55 ..\n-rw-------  1 xux g-xux 28624 Dec 31 16:37 batch_analysis.py\ndrwxrwxr-x  3 xux g-xux  4096 Dec 31 16:49 lib\n-rw-------  1 xux g-xux 11506 Dec 31 16:33 predict_all_assays.py\n-rw-------  1 xux g-xux 15374 Dec 31 16:34 predict_single_assay.py\n-rw-------  1 xux g-xux 16573 Dec 31 16:35 preprocess_data.py\ndrwxrwxr-x  2 xux g-xux  4096 Dec 31 16:49 __pycache__\n-rw-------  1 xux g-xux  9929 Dec 31 16:42 README.md",
+      "stderr": ""
+    },
+    {
+      "name": "Jobs Directory",
+      "status": "passed",
+      "command": "ls -la src/jobs/",
+      "return_code": 0,
+      "stdout": "total 32\ndrwxrwxr-x 3 xux g-xux  4096 Dec 31 16:48 .\ndrwxrwxr-x 5 xux g-xux  4096 Dec 31 16:49 ..\n-rw------- 1 xux g-xux   161 Dec 31 16:46 __init__.py\n-rw------- 1 xux g-xux 12981 Dec 31 16:47 manager.py\ndrwxrwxr-x 2 xux g-xux  4096 Dec 31 16:48 __pycache__",
+      "stderr": ""
+    },
+    {
+      "name": "Claude MCP List",
+      "status": "passed",
+      "command": "claude mcp list",
+      "return_code": 0,
+      "stdout": "Checking MCP server health...\n\ncycpep-tools: /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/env/bin/python /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/server.py - \u2713 Connected",
+      "stderr": ""
+    },
+    {
+      "name": "FastMCP Dev Server",
+      "status": "failed",
+      "command": "source $(conda info --base)/etc/profile.d/conda.sh && conda activate ./env && timeout 3 fastmcp dev src/server.py",
+      "return_code": 124,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

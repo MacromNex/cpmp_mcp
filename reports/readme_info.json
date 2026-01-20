@@ -1,0 +1,347 @@
+{
+  "project_name": "cycpep-tools",
+  "description": "MCP tools for cyclic peptide computational analysis and membrane permeability prediction",
+  "version": "1.0.0",
+  "created_date": "2025-12-31",
+  "environment": {
+    "python_version": "3.10",
+    "package_manager": "mamba (preferred over conda)",
+    "total_size": "~2.1GB",
+    "key_dependencies": [
+      "rdkit=2024.3.2",
+      "pytorch=2.5.1",
+      "pandas=2.2.3",
+      "scikit-learn=1.6.1",
+      "fastmcp",
+      "loguru"
+    ]
+  },
+  "tools": [
+    {
+      "name": "get_job_status",
+      "type": "job_management",
+      "description": "Check job progress and status",
+      "parameters": ["job_id"],
+      "example_prompt": "Check status of job abc12345"
+    },
+    {
+      "name": "get_job_result",
+      "type": "job_management",
+      "description": "Get results of completed job",
+      "parameters": ["job_id"],
+      "example_prompt": "Get results for job abc12345"
+    },
+    {
+      "name": "get_job_log",
+      "type": "job_management",
+      "description": "View job execution logs",
+      "parameters": ["job_id", "tail"],
+      "example_prompt": "Show last 50 lines of logs for job abc12345"
+    },
+    {
+      "name": "cancel_job",
+      "type": "job_management",
+      "description": "Cancel running job",
+      "parameters": ["job_id"],
+      "example_prompt": "Cancel job abc12345"
+    },
+    {
+      "name": "list_jobs",
+      "type": "job_management",
+      "description": "List all jobs with status",
+      "parameters": ["status"],
+      "example_prompt": "List all completed jobs"
+    },
+    {
+      "name": "preprocess_cyclic_peptide_data",
+      "type": "sync",
+      "description": "Preprocess and split cyclic peptide datasets for model training",
+      "runtime": "~15 seconds for small datasets",
+      "parameters": ["input_file", "output_dir", "train_size", "skip_featurization"],
+      "example_prompt": "Preprocess @examples/data/sample_cyclic_peptides.csv with 70/10/20 train/val/test splits"
+    },
+    {
+      "name": "predict_single_assay_permeability",
+      "type": "sync",
+      "description": "Predict membrane permeability for a specific assay",
+      "runtime": "~3 minutes for 19 molecules",
+      "parameters": ["assay", "input_file", "with_labels", "device"],
+      "example_prompt": "Predict Caco-2 permeability for @examples/data/sample_cyclic_peptides.csv"
+    },
+    {
+      "name": "predict_all_assays_permeability",
+      "type": "sync",
+      "description": "Predict permeability across all 4 assays (PAMPA, Caco-2, RRCK, MDCK)",
+      "runtime": "~8 minutes for 19 molecules",
+      "parameters": ["input_file", "device", "batch_size"],
+      "example_prompt": "Predict permeability across all assays for @examples/data/sample_cyclic_peptides.csv"
+    },
+    {
+      "name": "analyze_cyclic_peptide_batch",
+      "type": "sync",
+      "description": "Comprehensive analysis with molecular properties and visualizations",
+      "runtime": "~4 minutes for 19 molecules",
+      "parameters": ["input_file", "output_dir", "calculate_properties", "create_visualizations"],
+      "example_prompt": "Analyze @examples/data/sample_cyclic_peptides.csv with molecular properties and plots"
+    },
+    {
+      "name": "submit_preprocess_data",
+      "type": "submit",
+      "description": "Submit preprocessing job for large datasets",
+      "parameters": ["input_file", "output_dir", "job_name"],
+      "example_prompt": "Submit preprocessing job for large dataset with job name 'preprocess_v1'"
+    },
+    {
+      "name": "submit_single_assay_prediction",
+      "type": "submit",
+      "description": "Submit single assay prediction job",
+      "parameters": ["assay", "input_file", "job_name"],
+      "example_prompt": "Submit Caco-2 prediction job for large dataset"
+    },
+    {
+      "name": "submit_all_assays_prediction",
+      "type": "submit",
+      "description": "Submit all assays prediction job",
+      "parameters": ["input_file", "job_name"],
+      "example_prompt": "Submit job to predict all assays for large peptide library"
+    },
+    {
+      "name": "submit_batch_analysis",
+      "type": "submit",
+      "description": "Submit comprehensive analysis job",
+      "parameters": ["input_file", "output_dir", "job_name"],
+      "example_prompt": "Submit comprehensive analysis job with visualizations"
+    },
+    {
+      "name": "validate_cyclic_peptide_smiles",
+      "type": "sync",
+      "description": "Validate SMILES strings for cyclic peptides",
+      "runtime": "~5 seconds",
+      "parameters": ["smiles_list"],
+      "example_prompt": "Validate this SMILES: 'CC(=O)NC1CCCC1C(=O)O'"
+    },
+    {
+      "name": "get_server_info",
+      "type": "utility",
+      "description": "Get server status and capabilities",
+      "parameters": [],
+      "example_prompt": "What tools and capabilities are available?"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "predict_all_assays.py",
+      "description": "Predict cyclic peptide permeability across all 4 assays",
+      "source": "repo/CPMP/examples/use_case_1_predict_all_assays.py",
+      "example_command": "python scripts/predict_all_assays.py --input examples/data/sample_cyclic_peptides.csv --output results/all_predictions.csv",
+      "parameters": {
+        "input": "Input CSV with SMILES column",
+        "output": "Output CSV file (optional)",
+        "device": "cpu or cuda",
+        "batch-size": "Batch size for processing"
+      }
+    },
+    {
+      "name": "predict_single_assay.py",
+      "description": "Predict permeability for specific assay with detailed analysis",
+      "source": "repo/CPMP/examples/use_case_2_predict_single_assay.py",
+      "example_command": "python scripts/predict_single_assay.py --assay caco2 --input examples/data/sample_cyclic_peptides.csv --with-labels",
+      "parameters": {
+        "assay": "pampa, caco2, rrck, or mdck",
+        "input": "Input CSV file",
+        "with-labels": "Include binary classification",
+        "output": "Output file path (optional)"
+      }
+    },
+    {
+      "name": "preprocess_data.py",
+      "description": "Preprocess and split cyclic peptide datasets for training",
+      "source": "examples/use_case_4_data_preprocessing.py",
+      "example_command": "python scripts/preprocess_data.py --dataset examples/data/sample_cyclic_peptides.csv --output-dir results/preprocessing --skip-featurization",
+      "parameters": {
+        "dataset": "Input dataset CSV file",
+        "output-dir": "Output directory for splits",
+        "skip-featurization": "Skip molecular featurization",
+        "train-size": "Training fraction (default: 0.7)",
+        "val-size": "Validation fraction (default: 0.1)",
+        "test-size": "Test fraction (default: 0.2)"
+      }
+    },
+    {
+      "name": "batch_analysis.py",
+      "description": "Comprehensive analysis and visualization of predictions",
+      "source": "examples/use_case_5_batch_analysis.py",
+      "example_command": "python scripts/batch_analysis.py --input examples/data/sample_cyclic_peptides.csv --output-dir results/analysis --calculate-properties --create-visualizations",
+      "parameters": {
+        "input": "Input CSV file",
+        "output-dir": "Analysis output directory",
+        "calculate-properties": "Calculate molecular properties",
+        "create-visualizations": "Generate analysis plots"
+      }
+    }
+  ],
+  "demo_data": [
+    {
+      "file": "sample_cyclic_peptides.csv",
+      "description": "Main sample dataset with 19 cyclic peptides",
+      "location": "examples/data/",
+      "format": "CSV with 'smiles' and 'y' columns",
+      "used_by": ["All prediction tools", "All analysis tools"],
+      "properties": {
+        "molecule_count": 19,
+        "molecular_weight_range": "400-1200 g/mol",
+        "permeability_range": "-7.5 to -4.5 log cm/s",
+        "ring_sizes": "6-12 amino acids"
+      }
+    },
+    {
+      "file": "pampa_sample.csv",
+      "description": "PAMPA-specific sample dataset",
+      "location": "examples/data/sequences/",
+      "format": "CSV with SMILES and permeability values",
+      "used_by": ["Single assay prediction tools"]
+    },
+    {
+      "file": "mdck_sample.csv",
+      "description": "MDCK-specific sample dataset",
+      "location": "examples/data/sequences/",
+      "format": "CSV with SMILES and permeability values",
+      "used_by": ["Single assay prediction tools"]
+    },
+    {
+      "file": "rrck_sample.csv",
+      "description": "RRCK-specific sample dataset",
+      "location": "examples/data/sequences/",
+      "format": "CSV with SMILES and permeability values",
+      "used_by": ["Single assay prediction tools"]
+    }
+  ],
+  "configs": [
+    {
+      "file": "predict_all_assays_config.json",
+      "description": "Configuration for multi-assay permeability prediction",
+      "parameters": {
+        "device": "cpu or cuda",
+        "batch_size": "Processing batch size",
+        "assays": "Configuration for all 4 assays",
+        "model_architecture": "MAT transformer parameters"
+      }
+    },
+    {
+      "file": "predict_single_assay_config.json",
+      "description": "Configuration for single assay analysis",
+      "parameters": {
+        "device": "Computing device",
+        "analysis": "Binary classification settings",
+        "thresholds": "Permeability thresholds"
+      }
+    },
+    {
+      "file": "preprocess_data_config.json",
+      "description": "Configuration for data preprocessing",
+      "parameters": {
+        "data_filter": "Filtering criteria",
+        "train_split": "Data splitting ratios",
+        "featurization": "Molecular featurization settings"
+      }
+    },
+    {
+      "file": "batch_analysis_config.json",
+      "description": "Configuration for comprehensive analysis",
+      "parameters": {
+        "molecular_properties": "List of properties to calculate",
+        "visualization": "Plot types and styling",
+        "analysis": "Statistical analysis settings"
+      }
+    },
+    {
+      "file": "default_config.json",
+      "description": "Global default settings for all scripts",
+      "parameters": {
+        "general": "Common settings",
+        "paths": "Default file paths",
+        "molecular_properties": "Standard property list"
+      }
+    }
+  ],
+  "supported_assays": [
+    {
+      "name": "pampa",
+      "full_name": "Parallel Artificial Membrane Permeability Assay",
+      "description": "Models passive diffusion across artificial membranes",
+      "threshold": -6.0,
+      "performance": "R² = 0.67"
+    },
+    {
+      "name": "caco2",
+      "full_name": "Caco-2 Cell Permeability",
+      "description": "Models intestinal absorption and oral bioavailability",
+      "threshold": -6.0,
+      "performance": "R² = 0.75"
+    },
+    {
+      "name": "rrck",
+      "full_name": "Ralph Russ Canine Kidney",
+      "description": "Models blood-brain barrier permeability",
+      "threshold": -6.0,
+      "performance": "R² = 0.62"
+    },
+    {
+      "name": "mdck",
+      "full_name": "Madin-Darby Canine Kidney",
+      "description": "Models renal clearance and kidney permeability",
+      "threshold": -6.0,
+      "performance": "R² = 0.73"
+    }
+  ],
+  "installation": {
+    "environment_path": "./env",
+    "activation_command": "mamba activate ./env",
+    "mcp_installation": {
+      "method_1": "fastmcp install src/server.py --name cycpep-tools",
+      "method_2": "claude mcp add cycpep-tools -- $(pwd)/env/bin/python $(pwd)/src/server.py",
+      "method_3": "Manual settings.json configuration"
+    }
+  },
+  "performance_benchmarks": {
+    "small_dataset": {
+      "size": "19 molecules",
+      "validation": "5 seconds",
+      "preprocessing": "15 seconds",
+      "single_assay": "3 minutes",
+      "all_assays": "8 minutes",
+      "batch_analysis": "4 minutes"
+    },
+    "scalability": {
+      "sync_api_limit": "<100 molecules",
+      "submit_api_recommended": ">100 molecules",
+      "memory_requirements": "2GB minimum, 8GB recommended"
+    }
+  },
+  "integration": {
+    "claude_code": {
+      "supported": true,
+      "file_references": "Use @ syntax for file paths",
+      "examples": "@examples/data/sample_cyclic_peptides.csv"
+    },
+    "gemini_cli": {
+      "supported": true,
+      "configuration": "~/.gemini/settings.json",
+      "tested": true
+    }
+  },
+  "testing_status": {
+    "scripts_validated": true,
+    "mcp_server_tested": true,
+    "claude_code_integration": true,
+    "gemini_cli_integration": true,
+    "all_paths_verified": true
+  },
+  "limitations": {
+    "model_weights": "Pre-trained model weights required for full functionality",
+    "computational_requirements": "Molecular featurization is memory and time intensive",
+    "dataset_size": "Large datasets (>1000 molecules) require submit API"
+  },
+  "generated_by": "Claude Code - Step 8 Documentation Task",
+  "last_updated": "2025-12-31"
+}

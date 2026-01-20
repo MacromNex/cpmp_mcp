@@ -1,0 +1,43 @@
+{
+  "test_date": "2025-12-31T16:57:03.234762",
+  "server_path": "/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/server.py",
+  "tests": {
+    "server_startup": {
+      "status": "failed",
+      "output": "",
+      "error": "EnvironmentLocationNotFound: Not a conda environment: /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/env",
+      "duration_seconds": 30
+    },
+    "rdkit_import": {
+      "status": "failed",
+      "output": "",
+      "error": "EnvironmentLocationNotFound: Not a conda environment: /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/env"
+    },
+    "tool_count": {
+      "status": "failed",
+      "error": "EnvironmentLocationNotFound: Not a conda environment: /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/env"
+    },
+    "claude_mcp_registration": {
+      "status": "failed",
+      "output": "No MCP servers configured. Use `claude mcp add` to add a server.",
+      "message": "Server not found or not connected"
+    },
+    "fastmcp_dev_startup": {
+      "status": "failed",
+      "output": "EnvironmentLocationNotFound: Not a conda environment: /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/env",
+      "message": "Server failed to start"
+    },
+    "scripts_directory": {
+      "status": "failed",
+      "error": "Scripts directory not found: /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/scripts"
+    }
+  },
+  "issues": [],
+  "summary": {
+    "total_tests": 6,
+    "passed": 0,
+    "failed": 6,
+    "errors": 0,
+    "pass_rate": "0.0%"
+  }
+}

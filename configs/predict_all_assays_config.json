@@ -1,0 +1,72 @@
+{
+  "_description": "Configuration for cyclic peptide multi-assay permeability prediction",
+  "_source": "Extracted from repo/CPMP/examples/use_case_1_predict_all_assays.py",
+
+  "device": "cpu",
+  "batch_size": 32,
+
+  "featurization": {
+    "force_field": "uff",
+    "ignore_interfrag_interactions": true,
+    "add_dummy_node": true,
+    "one_hot_formal_charge": false
+  },
+
+  "model": {
+    "d_atom": 28,
+    "d_model": 64,
+    "N": 6,
+    "h": 64,
+    "N_dense": 2,
+    "lambda_attention": 0.1,
+    "lambda_distance": 0.6,
+    "leaky_relu_slope": 0.16,
+    "dense_output_nonlinearity": "relu",
+    "distance_matrix_kernel": "exp",
+    "aggregation_type": "mean",
+    "dropout": 0.1
+  },
+
+  "assays": {
+    "pampa": {
+      "name": "PAMPA",
+      "full_name": "Parallel Artificial Membrane Permeability Assay",
+      "batch_size": 32,
+      "threshold": -6.0,
+      "model_path": "model_checkpoints/pampa_uff_ig_true_final.pt"
+    },
+    "caco2": {
+      "name": "Caco-2",
+      "full_name": "Human colon adenocarcinoma cell line",
+      "batch_size": 64,
+      "threshold": -6.0,
+      "model_path": "model_checkpoints/caco2_uff_ig_true_final.pt"
+    },
+    "rrck": {
+      "name": "RRCK",
+      "full_name": "Ralph Russ Canine Kidney cells",
+      "batch_size": 64,
+      "threshold": -6.0,
+      "model_path": "model_checkpoints/rrck_uff_ig_true_final.pt"
+    },
+    "mdck": {
+      "name": "MDCK",
+      "full_name": "Madin-Darby Canine Kidney cells",
+      "batch_size": 64,
+      "threshold": -6.0,
+      "model_path": "model_checkpoints/mdck_uff_ig_true_final.pt"
+    }
+  },
+
+  "input": {
+    "format": "csv",
+    "required_columns": ["smiles"],
+    "optional_columns": ["y"]
+  },
+
+  "output": {
+    "format": "csv",
+    "include_binary_classification": true,
+    "include_probabilities": true
+  }
+}

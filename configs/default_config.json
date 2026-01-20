@@ -1,0 +1,71 @@
+{
+  "_description": "Default configuration for all cyclic peptide MCP scripts",
+  "_version": "1.0",
+
+  "general": {
+    "device": "cpu",
+    "random_state": 42,
+    "verbose": true
+  },
+
+  "paths": {
+    "repo_root": "repo/CPMP",
+    "model_dir": "model_checkpoints",
+    "data_dir": "data",
+    "temp_dir": "temp"
+  },
+
+  "featurization": {
+    "force_field": "uff",
+    "ignore_interfrag_interactions": true,
+    "add_dummy_node": true,
+    "one_hot_formal_charge": false,
+    "use_data_saving": true
+  },
+
+  "model_architecture": {
+    "d_atom": 28,
+    "d_model": 64,
+    "N": 6,
+    "h": 64,
+    "N_dense": 2,
+    "lambda_attention": 0.1,
+    "lambda_distance": 0.6,
+    "leaky_relu_slope": 0.16,
+    "dense_output_nonlinearity": "relu",
+    "distance_matrix_kernel": "exp",
+    "aggregation_type": "mean",
+    "dropout": 0.1
+  },
+
+  "assay_defaults": {
+    "threshold": -6.0,
+    "batch_size": 64,
+    "probability_scaling": 5.0
+  },
+
+  "data_processing": {
+    "min_y_value": -10.0,
+    "remove_duplicates": true,
+    "validate_smiles": true,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "test_size": 0.2
+  },
+
+  "visualization": {
+    "dpi": 300,
+    "figsize": [12, 8],
+    "style": "whitegrid"
+  },
+
+  "molecular_properties": [
+    "MW",
+    "LogP",
+    "HBD",
+    "HBA",
+    "TPSA",
+    "RotBonds",
+    "Rings"
+  ]
+}

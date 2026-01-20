@@ -1,0 +1,69 @@
+{
+  "_description": "Configuration for cyclic peptide batch analysis and visualization",
+  "_source": "Extracted from examples/use_case_5_batch_analysis.py",
+
+  "device": "cpu",
+  "calculate_properties": true,
+  "create_visualizations": true,
+
+  "featurization": {
+    "force_field": "uff",
+    "ignore_interfrag_interactions": true,
+    "add_dummy_node": true,
+    "one_hot_formal_charge": false
+  },
+
+  "model": {
+    "d_atom": 28,
+    "d_model": 64,
+    "N": 6,
+    "h": 64,
+    "N_dense": 2,
+    "lambda_attention": 0.1,
+    "lambda_distance": 0.6,
+    "leaky_relu_slope": 0.16,
+    "dense_output_nonlinearity": "relu",
+    "distance_matrix_kernel": "exp",
+    "aggregation_type": "mean",
+    "dropout": 0.1
+  },
+
+  "molecular_properties": {
+    "calculate": true,
+    "properties": ["MW", "LogP", "HBD", "HBA", "TPSA", "RotBonds", "Rings"]
+  },
+
+  "analysis": {
+    "calculate_statistics": true,
+    "calculate_correlations": true,
+    "binary_classification": true,
+    "probability_scaling": 5.0
+  },
+
+  "visualization": {
+    "create_plots": true,
+    "dpi": 300,
+    "figsize": [12, 8],
+    "style": "whitegrid",
+    "plots": {
+      "correlation_heatmap": true,
+      "permeability_distributions": true,
+      "pairwise_scatterplots": true,
+      "property_correlations": true
+    }
+  },
+
+  "input": {
+    "format": "csv",
+    "required_columns": ["smiles"],
+    "optional_columns": ["y"]
+  },
+
+  "output": {
+    "save_complete_results": true,
+    "save_statistical_summary": true,
+    "save_correlation_matrix": true,
+    "save_analysis_report": true,
+    "save_visualizations": true
+  }
+}
