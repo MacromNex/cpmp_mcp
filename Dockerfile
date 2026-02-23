@@ -25,6 +25,11 @@ RUN pip install --no-cache-dir \
 RUN git clone https://github.com/panda1103/CPMP.git /app/repo/CPMP || true
 
 # Copy MCP server source
-COPY src/ src/
+COPY --chmod=755 src/ src/
 
+# Create writable directories for jobs/results
+RUN mkdir -p /app/jobs /app/results && chmod 777 /app /app/jobs /app/results
+
+ENV NVIDIA_CUDA_END_OF_LIFE=0
+ENTRYPOINT []
 CMD ["python", "src/server.py"]
