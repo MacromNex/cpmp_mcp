@@ -218,9 +218,14 @@ def run_predict_all_assays(
             assay_predictions = []
             with torch.no_grad():
                 for batch in loader:
-                    X_batch = [x.to(device) if isinstance(x, torch.Tensor) else x for x in batch[0]]
-                    outputs = model(X_batch)
-                    assay_predictions.extend(outputs.cpu().numpy())
+                    adjacency, features, distances, labels = batch
+                    batch_mask = torch.sum(torch.abs(features), dim=-1) != 0
+                    adjacency = adjacency.to(device)
+                    features = features.to(device)
+                    distances = distances.to(device)
+                    batch_mask = batch_mask.to(device)
+                    outputs = model(features, batch_mask, adjacency, distances, None)
+                    assay_predictions.extend(outputs.view(-1).cpu().numpy())
 
             # Store predictions
             predictions[assay_name] = np.array(assay_predictions).flatten()

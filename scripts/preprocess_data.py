@@ -48,6 +48,8 @@ DEFAULT_CONFIG = {
     "featurization": {
         "force_field": "uff",
         "ignore_interfrag_interactions": True,
+        "add_dummy_node": True,
+        "one_hot_formal_charge": True,
         "skip_featurization": True  # Default to skip for speed
     }
 }
@@ -337,7 +339,9 @@ def run_preprocess_data(
                 X_data, y_data = load_data_from_df(
                     str(split_file),
                     ff=config["featurization"]["force_field"],
-                    ignoreInterfragInteractions=config["featurization"]["ignore_interfrag_interactions"]
+                    ignoreInterfragInteractions=config["featurization"]["ignore_interfrag_interactions"],
+                    add_dummy_node=config["featurization"].get("add_dummy_node", True),
+                    one_hot_formal_charge=config["featurization"].get("one_hot_formal_charge", True)
                 )
 
                 # Save featurized data

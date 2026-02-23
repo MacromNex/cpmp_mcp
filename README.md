@@ -81,7 +81,7 @@ Please follow the information in `reports/step3_environment.md` for detailed set
 
 ```bash
 # Navigate to the MCP directory
-cd /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp
+cd /path/to/cpmp_mcp
 
 # Create conda environment (use mamba if available)
 mamba create -p ./env python=3.10 -y
@@ -111,6 +111,44 @@ pip install numpy scipy
 
 # Install MCP dependencies
 pip install fastmcp loguru
+```
+
+---
+
+## Model Setup
+
+The CPMP toolkit requires pre-trained model weights to make predictions. The model files are stored with a specific naming convention from the original repository.
+
+### Model File Locations
+
+- **Source**: `repo/CPMP/saved_model/` contains the original model weights
+- **Symlinks**: `repo/CPMP/model_checkpoints/` contains symlinks used by the scripts
+
+### Model File Naming
+
+The original CPMP repository uses the naming convention `{assay}.best_wegiht.pth` (note: the typo "wegiht" is intentional and comes from the original repository). The scripts expect files at `model_checkpoints/{assay}_uff_ig_true_final.pt`.
+
+### Expected Files
+
+| Saved Model | Symlink |
+|-------------|---------|
+| `saved_model/pampa.best_wegiht.pth` | `model_checkpoints/pampa_uff_ig_true_final.pt` |
+| `saved_model/caco2.best_wegiht.pth` | `model_checkpoints/caco2_uff_ig_true_final.pt` |
+| `saved_model/rrck.best_wegiht.pth` | `model_checkpoints/rrck_uff_ig_true_final.pt` |
+| `saved_model/mdck.best_wegiht.pth` | `model_checkpoints/mdck_uff_ig_true_final.pt` |
+
+### Creating Symlinks Manually
+
+If the `quick_setup.sh` script didn't create the symlinks, you can create them manually:
+
+```bash
+cd /path/to/cpmp_mcp
+mkdir -p repo/CPMP/model_checkpoints
+
+for assay in pampa caco2 rrck mdck; do
+    ln -sf "../saved_model/${assay}.best_wegiht.pth" \
+           "repo/CPMP/model_checkpoints/${assay}_uff_ig_true_final.pt"
+done
 ```
 
 ---
@@ -227,8 +265,8 @@ Add to `~/.claude/settings.json`:
 {
   "mcpServers": {
     "cycpep-tools": {
-      "command": "/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/env/bin/python",
-      "args": ["/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/server.py"]
+      "command": "/path/to/cpmp_mcp/env/bin/python",
+      "args": ["/path/to/cpmp_mcp/src/server.py"]
     }
   }
 }
@@ -303,8 +341,8 @@ Add to `~/.gemini/settings.json`:
 {
   "mcpServers": {
     "cycpep-tools": {
-      "command": "/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/env/bin/python",
-      "args": ["/home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp/src/server.py"]
+      "command": "/path/to/cpmp_mcp/env/bin/python",
+      "args": ["/path/to/cpmp_mcp/src/server.py"]
     }
   }
 }
@@ -521,7 +559,7 @@ python -c "from rdkit import Chem; print('RDKit version:', Chem.__version__)"
 **Problem:** Import errors
 ```bash
 # Verify CPMP modules
-cd /home/xux/Desktop/CycPepMCP/CycPepMCP/tool-mcps/cpmp_mcp
+cd /path/to/cpmp_mcp
 python -c "
 import sys
 sys.path.append('repo/CPMP')
@@ -575,6 +613,23 @@ tail -20 jobs/<job_id>/job.log
 ```
 Download pre-trained model weights and place in repo/CPMP/saved_model/
 Required: pampa.best_wegiht.pth, caco2.best_wegiht.pth, etc.
+```
+
+**Problem:** Model checkpoints not found (symlinks missing)
+```bash
+# Recreate model symlinks
+cd /path/to/cpmp_mcp
+mkdir -p repo/CPMP/model_checkpoints
+
+for assay in pampa caco2 rrck mdck; do
+    if [ -f "repo/CPMP/saved_model/${assay}.best_wegiht.pth" ]; then
+        ln -sf "../saved_model/${assay}.best_wegiht.pth" \
+               "repo/CPMP/model_checkpoints/${assay}_uff_ig_true_final.pt"
+        echo "Created symlink for $assay"
+    else
+        echo "WARNING: Model file for $assay not found"
+    fi
+done
 ```
 
 **Problem:** Out of memory during featurization

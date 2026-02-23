@@ -28,6 +28,25 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 from jobs.manager import job_manager
 from loguru import logger
 
+def serialize_result(result: dict) -> dict:
+    """Convert DataFrames and numpy arrays to JSON-serializable types."""
+    import numpy as np
+    if not isinstance(result, dict):
+        return result
+    serialized = {}
+    for key, value in result.items():
+        if isinstance(value, pd.DataFrame):
+            serialized[key] = value.to_dict('records')
+        elif isinstance(value, dict):
+            serialized[key] = serialize_result(value)
+        elif isinstance(value, np.ndarray):
+            serialized[key] = value.tolist()
+        elif hasattr(value, 'tolist'):
+            serialized[key] = value.tolist()
+        else:
+            serialized[key] = value
+    return serialized
+
 # Create MCP server
 mcp = FastMCP("cycpep-tools")
 
@@ -176,7 +195,7 @@ def preprocess_cyclic_peptide_data(
             min_y=min_y
         )
 
-        return {"status": "success", **result}
+        return serialize_result({"status": "success", **result})
 
     except FileNotFoundError as e:
         return {"status": "error", "error": f"File not found: {e}"}
@@ -232,7 +251,7 @@ def predict_single_assay_permeability(
             batch_size=batch_size
         )
 
-        return {"status": "success", **result}
+        return serialize_result({"status": "success", **result})
 
     except FileNotFoundError as e:
         return {"status": "error", "error": f"File not found: {e}"}
@@ -282,7 +301,7 @@ def predict_all_assays_permeability(
             batch_size=batch_size
         )
 
-        return {"status": "success", **result}
+        return serialize_result({"status": "success", **result})
 
     except FileNotFoundError as e:
         return {"status": "error", "error": f"File not found: {e}"}
@@ -337,7 +356,7 @@ def analyze_cyclic_peptide_batch(
             batch_size=batch_size
         )
 
-        return {"status": "success", **result}
+        return serialize_result({"status": "success", **result})
 
     except FileNotFoundError as e:
         return {"status": "error", "error": f"File not found: {e}"}
